@@ -1,0 +1,62 @@
+
+@page "{id:int}"
+@model DetailsModel
+@using Microsoft.Extensions.Options
+@using MicroBlog.Models
+@inject IOptions<SiteOptions> SiteOptions
+
+@if (Model.Post == null)
+{
+    <h1>Post Not Found</h1>
+
+    <p>The post you are looking for does not exist.</p>
+
+    <p>
+        <a asp-page="/Index">Back to Posts</a>
+    </p>
+}
+else
+{
+    <article class="post-details">
+
+        <h1>@Model.Post.Title</h1>
+
+        <p class="post-date">
+            Posted @Model.Post.CreatedUtc.ToLocalTime().ToString("f")
+        </p>
+
+        <p>
+            @Model.Post.Body
+        </p>
+
+        <p>
+            <a asp-page="/Edit" asp-route-id="@Model.Post.Id">Edit</a>
+            |
+            <a asp-page="/Delete" asp-route-id="@Model.Post.Id">Delete</a>
+            |
+            <a asp-page="/Index">Back to Posts</a>
+        </p>
+
+    </article>
+
+    @if (SiteOptions.Value.EnableComments)
+    {
+        <section class="comments">
+            <h2>Leave Comment</h2>
+
+            <form method="post">
+                <div>
+                    <label for="commentName">Name</label>
+                    <input type="text" id="commentName" name="commentName" required />
+                </div>
+
+                <div>
+                    <label for="commentText">Comment</label>
+                    <textarea id="commentText" name="commentText" required></textarea>
+                </div>
+
+                <button type="submit">Submit Comment</button>
+            </form>
+        </section>
+    }
+}
